@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Happy Birthday!</title>
+    <style>
+        :root {
+            --bg: #0f1724;
+            --accent: #ff6b6b;
+            --accent2: #ffd166;
+            --card: #0b1220;
+            --glass: rgba(255, 255, 255, 0.06);
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        body {
+            background: radial-gradient(1200px 600px at 10% 10%, rgba(255, 107, 107, 0.06), transparent 6%),
+                radial-gradient(800px 400px at 90% 90%, rgba(255, 209, 102, 0.04), transparent 6%),
+                var(--bg);
+            color: #e6eef8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .card {
+            width: min(920px, 94vw);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border-radius: 18px;
+            padding: 36px;
+            box-shadow: 0 10px 40px rgba(2, 6, 23, 0.6);
+            position: relative;
+            overflow: visible;
+            backdrop-filter: blur(6px) saturate(120%);
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .left {
+            padding-right: 12px;
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            font-size: clamp(32px, 4.5vw, 56px);
+            line-height: 1;
+            letter-spacing: -0.02em;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            text-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .sub {
+            margin: 6px 0 20px 0;
+            color: #cfe7ff;
+            opacity: 0.9;
+            font-size: clamp(14px, 2.2vw, 18px);
+        }
+
+        .message {
+            font-size: clamp(16px, 2.0vw, 20px);
+            color: #eaf4ff;
+            min-height: 86px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* caret moved into the typed span so it wraps correctly with spaces/line breaks */
+        .typed {
+            display: inline;
+            white-space: pre-wrap;
+            word-break: break-word;
+            vertical-align: bottom;
+        }
+
+        .typed::after {
+            content: "";
+            display: inline-block;
+            width: 0.65ch;
+            /* caret width relative to character width */
+            height: 1.05em;
+            /* match line-height */
+            margin-left: 0.15ch;
+            background: linear-gradient(180deg, #fff, #e8f7ff);
+            border-radius: 3px;
+            vertical-align: bottom;
+            animation: blink 1s steps(1, end) infinite;
+            opacity: 0.95;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0.0
+            }
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            background: linear-gradient(180deg, var(--accent), #ff4a4a);
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.14);
+        }
+
+        .btn.secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #dff0ff;
+            font-weight: 600;
+        }
+
+        .meta {
+            color: #9fbfe6;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+
+        /* right column */
+        .right {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview {
+            width: 100%;
+            height: 220px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(0, 0, 0, 0.12));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 18px;
+            box-sizing: border-box;
+            color: #eaf4ff;
+        }
+
+        .sparkles {
+            font-size: 36px;
+            filter: drop-shadow(0 6px 30px rgba(0, 0, 0, 0.6))
+        }
+
+        .small {
+            font-size: 13px;
+            color: #b7d6ff;
+            opacity: 0.9;
+        }
+
+        /* confetti canvas overlay */
+        canvas.confetti {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* responsive */
+        @media (max-width:860px) {
+            .card {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .right {
+                order: -1
+            }
+
+            .preview {
+                height: 150px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas class="confetti"></canvas>
+
+    <div class="card" role="main" aria-label="Birthday wish card">
+        <div class="left">
+            <h1 id="title">Happy Birthday, <span id="name">Friend</span>!</h1>
+            <div class="sub" id="subtitle">A tiny surprise made with code — enjoy the show 🎉</div>
+
+            <div class="message" id="message">
+                <span class="typed" id="typed"></span>
+            </div>
+
+            <div class="controls">
+                <button class="btn" id="startBtn">Start the surprise</button>
+                <button class="btn secondary" id="againBtn" style="display:none">Play again</button>
+                <button class="btn secondary" id="shareBtn">Share (Twitter)</button>
+            </div>
+
+            <div class="meta">Tip: click "Start the surprise" and turn the volume up a bit for the full effect.</div>
+        </div>
+
+        <div class="right">
+            <div class="preview" aria-hidden="true">
+                <div class="sparkles">🎈🎂✨</div>
+                <div class="small">i am eagerly waiting for this day.</div>
+            </div>
+
+            <div style="font-size:13px;color:#9fc1ff;text-align:center;">
+                MANY MANY HAPPIEST RETURNS OF THE DAY.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ====== Configuration (edit or ask me to customize) ====== */
+        const RECIPIENT = "NAZO CHACHI";   // replace with the name you want
+        const LINES = [
+            "Today the world got brighter — because you were born.",
+            "May your day be packed with laughter, surprises, and cake.",
+            "Here’s to the wildest dreams, the loudest laughter, and a lifetime of winning at life.",
+            "You are loved. You are legendary. Happy Birthday!"
+        ];
+
+        /* ====== End configuration ====== */
+        document.getElementById('name').textContent = RECIPIENT;
+        document.getElementById('title').dataset.name = RECIPIENT;
+
+        const typedEl = document.getElementById('typed');
+        const startBtn = document.getElementById('startBtn');
+        const againBtn = document.getElementById('againBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const canvas = document.querySelector('canvas.confetti');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        let running = false;
+
+        function resizeCanvas() {
+            canvas.width = innerWidth * devicePixelRatio;
+            canvas.height = innerHeight * devicePixelRatio;
+            ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+        }
+        addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        /* tiny confetti system */
+        function spawnConfetti(x, y, amount = 30) {
+            const colors = ['#ff6b6b', '#ffd166', '#6be4ff', '#8b5cf6', '#7dd3fc', '#f9cb9c'];
+            for (let i = 0; i < amount; i++) {
+                const a = Math.random() * Math.PI * 2;
+                const speed = 2 + Math.random() * 7;
+                particles.push({
+                    x: x + (Math.random() - 0.5) * 40,
+                    y: y + (Math.random() - 0.5) * 20,
+                    vx: Math.cos(a) * speed,
+                    vy: Math.sin(a) * speed - 3,
+                    rot: Math.random() * 360,
+                    vr: (Math.random() - 0.5) * 12,
+                    size: 6 + Math.random() * 10,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    ttl: 180 + Math.floor(Math.random() * 80)
+                });
+            }
+        }
+
+        function updateParticles() {
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.vy += 0.18; // gravity
+                p.x += p.vx;
+                p.y += p.vy;
+                p.rot += p.vr * 0.5;
+                p.ttl--;
+                if (p.ttl <= 0 || p.y > innerHeight + 50) particles.splice(i, 1);
+            }
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            for (const p of particles) {
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rot * Math.PI / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+                ctx.restore();
+            }
+        }
+
+        /* typewriter effect */
+        async function typeLines(lines, el) {
+            el.textContent = "";
+            for (const line of lines) {
+                await typeText(line + "\n\n", el);
+            }
+        }
+
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        async function typeText(text, el) {
+            for (let i = 0; i < text.length; i++) {
+                el.textContent += text[i];
+                if (Math.random() < 0.02) spawnConfetti(innerWidth * Math.random(), innerHeight * Math.random(), 6);
+                await sleep(28 + Math.random() * 35);
+            }
+        }
+
+        /* tiny celebratory melody (WebAudio) */
+        function playMelody() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const now = ctx.currentTime;
+                const notes = [440, 660, 880, 660, 523, 392]; // simple uplifting sequence
+                for (let i = 0; i < notes.length; i++) {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.type = 'sine';
+                    o.frequency.value = notes[i];
+                    g.gain.value = 0.0001;
+                    o.connect(g);
+                    g.connect(ctx.destination);
+                    o.start(now + i * 0.18);
+                    g.gain.linearRampToValueAtTime(0.07, now + i * 0.01);
+                    g.gain.linearRampToValueAtTime(0.0001, now + i * 0.18 + 0.12);
+                    o.stop(now + i * 0.18 + 0.14);
+                }
+            } catch (e) {
+                // ignore if WebAudio blocked
+            }
+        }
+
+        /* animation loop */
+        function frame() {
+            if (!running) return;
+            updateParticles();
+            drawParticles();
+            requestAnimationFrame(frame);
+        }
+
+        /* start/again handlers */
+        startBtn.addEventListener('click', async () => {
+            if (running) return;
+            running = true;
+            startBtn.style.display = 'none';
+            againBtn.style.display = 'inline-block';
+            playMelody();
+            spawnConfetti(innerWidth * 0.5, innerHeight * 0.2, 120);
+            frame();
+            await typeLines(LINES, typedEl);
+            // final burst
+            for (let i = 0; i < 6; i++) {
+                spawnConfetti(innerWidth * (0.2 + 0.6 * Math.random()), innerHeight * 0.25 + 60 * i, 80);
+                await sleep(150);
+            }
+        });
+
+        againBtn.addEventListener('click', () => {
+            particles = [];
+            typedEl.textContent = "";
+            running = false;
+            startBtn.style.display = 'inline-block';
+            againBtn.style.display = 'none';
+        });
+
+        /* share button (Twitter intent) */
+        shareBtn.addEventListener('click', () => {
+            const msg = encodeURIComponent(`Happy Birthday ${RECIPIENT}! 🎉🎂 — Surprise made with code: open this file to see the animation!`);
+            const url = `https://twitter.com/intent/tweet?text=${msg}`;
+            window.open(url, '_blank');
+        });
+    </script>
+</body>
+
+
+
+</html>
